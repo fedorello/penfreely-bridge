@@ -9,7 +9,10 @@ The agent makes only an **outbound** secure connection to the service, so there
 are **no ports to open** — it works behind routers and firewalls. It is a small,
 self-contained binary; no Docker required.
 
-> Step-by-step guide with download buttons per OS:
+**Supported systems:** macOS (Apple Silicon and Intel), Windows (x64 and ARM64),
+and Linux (x64 and ARM64).
+
+> Step-by-step guide:
 > **https://penfreely.com/local-models**
 
 ## Quick start
@@ -30,7 +33,7 @@ ARCH=$([ "$(uname -m)" = arm64 ] && echo aarch64 || echo x86_64)
 curl -fsSL "https://github.com/fedorello/penfreely-bridge/releases/latest/download/penfreely-bridge-${ARCH}-apple-darwin.tar.gz" | tar xz
 xattr -d com.apple.quarantine penfreely-bridge 2>/dev/null; chmod +x penfreely-bridge
 PENFREELY_BRIDGE_TOKEN="<your-token>" \
-  PENFREELY_BACKEND_WS_URL="wss://app.penfreely.com/bridge/connect" \
+  PENFREELY_BACKEND_WS_URL="wss://api.penfreely.com/bridge/connect" \
   ./penfreely-bridge
 ```
 
@@ -41,7 +44,7 @@ ARCH=$([ "$(uname -m)" = aarch64 ] && echo aarch64 || echo x86_64)
 curl -fsSL "https://github.com/fedorello/penfreely-bridge/releases/latest/download/penfreely-bridge-${ARCH}-unknown-linux-gnu.tar.gz" | tar xz
 chmod +x penfreely-bridge
 PENFREELY_BRIDGE_TOKEN="<your-token>" \
-  PENFREELY_BACKEND_WS_URL="wss://app.penfreely.com/bridge/connect" \
+  PENFREELY_BACKEND_WS_URL="wss://api.penfreely.com/bridge/connect" \
   ./penfreely-bridge
 ```
 
@@ -52,7 +55,7 @@ $arch = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'aarch64' } else { 'x86_6
 Invoke-WebRequest "https://github.com/fedorello/penfreely-bridge/releases/latest/download/penfreely-bridge-$arch-pc-windows-msvc.zip" -OutFile penfreely-bridge.zip
 Expand-Archive penfreely-bridge.zip -DestinationPath . -Force
 $env:PENFREELY_BRIDGE_TOKEN="<your-token>"
-$env:PENFREELY_BACKEND_WS_URL="wss://app.penfreely.com/bridge/connect"
+$env:PENFREELY_BACKEND_WS_URL="wss://api.penfreely.com/bridge/connect"
 .\penfreely-bridge.exe
 ```
 
@@ -67,7 +70,7 @@ All settings are environment variables; only the token is required.
 | Variable | Required | Default | Purpose |
 |----------|:--------:|---------|---------|
 | `PENFREELY_BRIDGE_TOKEN` | yes | — | Bridge token from the service |
-| `PENFREELY_BACKEND_WS_URL` | no | `ws://localhost:8080/bridge/connect` | Backend websocket (production: `wss://app.penfreely.com/bridge/connect`) |
+| `PENFREELY_BACKEND_WS_URL` | no | `ws://localhost:8080/bridge/connect` | Backend websocket (production: `wss://api.penfreely.com/bridge/connect`) |
 | `PENFREELY_OLLAMA_URL` | no | `http://localhost:11434` | Local Ollama address |
 | `PENFREELY_RECONNECT_INITIAL_MS` | no | `1000` | Initial reconnect backoff |
 | `PENFREELY_RECONNECT_MAX_MS` | no | `30000` | Maximum reconnect backoff |
