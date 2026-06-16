@@ -23,7 +23,10 @@ jobs:
           - os: macos-14
             target: aarch64-apple-darwin
             archive: tar.gz
-          - os: macos-13
+          # Cross-compiled from the Apple Silicon runner (the Intel macos-13
+          # runners are scarce and queue for a long time); the Apple toolchain
+          # targets x86_64 natively and native-tls uses Secure Transport.
+          - os: macos-14
             target: x86_64-apple-darwin
             archive: tar.gz
           - os: ubuntu-latest
