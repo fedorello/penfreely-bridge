@@ -1,0 +1,39 @@
+[package]
+name = "penfreely-bridge"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+rust-version = "1.90"
+description = "Run your local Ollama models in PenFreely for free, over an outbound bridge."
+repository = "https://github.com/fedorello/penfreely-bridge"
+readme = "README.md"
+
+[[bin]]
+name = "penfreely-bridge"
+path = "src/main.rs"
+
+# Warnings are treated as errors in CI (see .github/workflows/ci.yml).
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+
+[dependencies]
+tokio = { version = "1.52.3", features = ["rt-multi-thread", "macros", "time", "signal", "sync"] }
+# native-tls uses the OS TLS stack (Schannel on Windows, Secure Transport on
+# macOS) and statically-linked OpenSSL on Linux (vendored), so the agent
+# cross-compiles to a self-contained binary for every OS without extra C deps.
+tokio-tungstenite = { version = "0.29.0", features = ["native-tls-vendored"] }
+futures = "0.3.32"
+async-stream = "0.3.6"
+reqwest = { version = "0.13.4", default-features = false, features = ["json", "stream", "native-tls-vendored"] }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
+uuid = { version = "1.23.2", features = ["serde", "v4"] }
+anyhow = "1.0.100"
+thiserror = "2.0.18"
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
+async-trait = "0.1.89"
+
+[dev-dependencies]
+tokio = { version = "1.52.3", features = ["rt", "macros", "time", "test-util"] }
