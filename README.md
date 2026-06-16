@@ -20,35 +20,45 @@ self-contained binary; no Docker required.
    ```
 2. **Get a bridge token** in PenFreely: *Studio → Connect your machine → Create a
    token*. It is shown once — copy it.
-3. **Download** the binary for your system from the
-   [latest release](https://github.com/fedorello/penfreely-bridge/releases/latest)
-   and run it with your token.
+3. **Run it.** Each command below detects your CPU, downloads the matching binary
+   into the current folder, and starts it. Replace `<your-token>` with yours.
 
-### macOS / Linux
+### macOS
 
 ```bash
-tar xzf penfreely-bridge-*.tar.gz
+ARCH=$([ "$(uname -m)" = arm64 ] && echo aarch64 || echo x86_64)
+curl -fsSL "https://github.com/fedorello/penfreely-bridge/releases/latest/download/penfreely-bridge-${ARCH}-apple-darwin.tar.gz" | tar xz
+xattr -d com.apple.quarantine penfreely-bridge 2>/dev/null; chmod +x penfreely-bridge
+PENFREELY_BRIDGE_TOKEN="<your-token>" \
+  PENFREELY_BACKEND_WS_URL="wss://app.penfreely.com/bridge/connect" \
+  ./penfreely-bridge
+```
+
+### Linux
+
+```bash
+ARCH=$([ "$(uname -m)" = aarch64 ] && echo aarch64 || echo x86_64)
+curl -fsSL "https://github.com/fedorello/penfreely-bridge/releases/latest/download/penfreely-bridge-${ARCH}-unknown-linux-gnu.tar.gz" | tar xz
 chmod +x penfreely-bridge
 PENFREELY_BRIDGE_TOKEN="<your-token>" \
   PENFREELY_BACKEND_WS_URL="wss://app.penfreely.com/bridge/connect" \
   ./penfreely-bridge
 ```
 
-On macOS the first run may be blocked as “from an unidentified developer”. Clear
-the quarantine flag (`xattr -d com.apple.quarantine penfreely-bridge`) or
-right-click the file → Open once.
-
 ### Windows (PowerShell)
 
 ```powershell
-Expand-Archive penfreely-bridge-*.zip -DestinationPath .
+$arch = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'aarch64' } else { 'x86_64' }
+Invoke-WebRequest "https://github.com/fedorello/penfreely-bridge/releases/latest/download/penfreely-bridge-$arch-pc-windows-msvc.zip" -OutFile penfreely-bridge.zip
+Expand-Archive penfreely-bridge.zip -DestinationPath . -Force
 $env:PENFREELY_BRIDGE_TOKEN="<your-token>"
 $env:PENFREELY_BACKEND_WS_URL="wss://app.penfreely.com/bridge/connect"
 .\penfreely-bridge.exe
 ```
 
 Leave the window open — while it runs, your model is available in PenFreely under
-**Your machine · local**, marked free.
+**Your machine · local**, marked free. Prefer to download manually? Grab any build
+from the [releases page](https://github.com/fedorello/penfreely-bridge/releases/latest).
 
 ## Configuration
 
